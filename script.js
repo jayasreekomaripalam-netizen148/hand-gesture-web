@@ -3,6 +3,25 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const gestureText = document.getElementById("gesture");
 
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true
+    });
+
+    video.srcObject = stream;
+
+    video.onloadedmetadata = () => {
+      video.play();
+      detectHands();
+    };
+
+  } catch (err) {
+    gestureText.innerHTML = "Camera Permission Denied";
+    console.error(err);
+  }
+}
+
 const hands = new Hands({
   locateFile: (file) =>
     `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
@@ -15,68 +34,46 @@ hands.setOptions({
   minTrackingConfidence: 0.7
 });
 
-const estimator = new fp.GestureEstimator(knownGestures);
-
-hands.onResults(async (results) => {
+hands.onResults((results) => {
 
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(video,0,0);
 
-  if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+  if(results.multiHandLandmarks){
 
-    for (const landmarks of results.multiHandLandmarks) {
+    gestureText.innerHTML =
+      "Hands Detected : " + results.multiHandLandmarks.length;
 
-      drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
-        color: "#00FF00",
-        lineWidth: 4
-      });
+    for(const landmarks of results.multiHandLandmarks){
 
-      drawLandmarks(ctx, landmarks, {
-        color: "#FF0000",
-        radius: 5
-      });
-
-      const prediction = await estimator.estimate(landmarks, 7.5);
-
-      if (prediction.gestures.length > 0) {
-
-        prediction.gestures.sort((a, b) => b.score - a.score);
-
-        gestureText.innerHTML =
-          prediction.gestures[0].name;
-
-      } else {
-
-        gestureText.innerHTML = "Unknown";
-
-      }
+      drawConnectors(ctx, landmarks, HAND_CONNECTIONS);
+      drawLandmarks(ctx, landmarks);
 
     }
 
-  } else {
+  }else{
 
-    gestureText.innerHTML = "No Hand";
+    gestureText.innerHTML="No Hand";
 
   }
 
 });
 
-const camera = new Camera(video, {
+async function detectHands(){
 
-  onFrame: async () => {
+  async function frame(){
 
-    await hands.send({
-      image: video
-    });
+    await hands.send({image:video});
 
-  },
+    requestAnimationFrame(frame);
 
-  width: 640,
-  height: 480
+  }
 
-});
+  frame();
 
-camera.start();
+}
+
+startCamera();
