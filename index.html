@@ -1,94 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hand Gesture Recognition</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hand Gesture Recognition</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
+    <link rel="stylesheet" href="style.css">
 
-    h1 {
-      color: #333;
-    }
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 
-    video, canvas {
-      width: 90%;
-      max-width: 700px;
-      border: 2px solid #333;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
-
-    #result {
-      margin-top: 15px;
-      font-size: 22px;
-      font-weight: bold;
-      color: blue;
-    }
-  </style>
+    <!-- Fingerpose -->
+    <script src="https://cdn.jsdelivr.net/npm/fingerpose@0.1.0/dist/fingerpose.min.js"></script>
 </head>
+
 <body>
 
-<h1>Hand Gesture Recognition</h1>
+<div class="container">
 
-<video id="video" autoplay playsinline></video>
+    <h1>🤖 AI Hand Gesture Recognition</h1>
 
-<canvas id="canvas"></canvas>
+    <video id="video" autoplay playsinline></video>
 
-<p id="result">Loading...</p>
+    <canvas id="canvas"></canvas>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <div class="gesture-box">
+        <h2>Detected Gesture</h2>
+        <h3 id="gesture">Waiting...</h3>
+    </div>
 
-<script>
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-const result = document.getElementById("result");
+</div>
 
-const hands = new Hands({
-  locateFile: (file) =>
-    `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
-
-hands.setOptions({
-  maxNumHands: 2,
-  modelComplexity: 1,
-  minDetectionConfidence: 0.7,
-  minTrackingConfidence: 0.7
-});
-
-hands.onResults((results) => {
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  if (results.multiHandLandmarks) {
-    result.innerText = "Hands Detected: " + results.multiHandLandmarks.length;
-  } else {
-    result.innerText = "No Hands Detected";
-  }
-});
-
-const camera = new Camera(video, {
-  onFrame: async () => {
-    await hands.send({ image: video });
-  },
-  width: 640,
-  height: 480
-});
-
-camera.start();
-</script>
+<script src="gestures.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
