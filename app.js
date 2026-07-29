@@ -106,9 +106,7 @@ async function startCamera() {
         height: 720
 
     });
-
-    camera.start();
-
+startCamera(hands, video);
 }
 
 startCamera();
