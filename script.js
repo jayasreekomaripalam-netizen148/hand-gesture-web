@@ -115,7 +115,119 @@ hands.onResults((results) => {
   }
 
 });
+// 1. Get elements
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
+const gestureText = document.getElementById("gesture");
+const confidenceText = document.getElementById("confidence");
+
+
+// 2. Create MediaPipe Hands
+const hands = new Hands({
+    locateFile:(file)=>{
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }
+});
+
+
+// 3. MediaPipe settings
+hands.setOptions({
+    maxNumHands:1,
+    modelComplexity:1,
+    minDetectionConfidence:0.7,
+    minTrackingConfidence:0.7
+});
+
+
+// 4. Results detection
+hands.onResults((results)=>{
+
+    // your onResults code here
+
+});
+
+
+// 👇 5. PUT recogniseGesture() HERE
+
+function recogniseGesture(landmarks){
+
+    let index =
+    landmarks[8].y < landmarks[6].y;
+
+    let middle =
+    landmarks[12].y < landmarks[10].y;
+
+    let ring =
+    landmarks[16].y < landmarks[14].y;
+
+    let pinky =
+    landmarks[20].y < landmarks[18].y;
+
+    let thumb =
+    landmarks[4].y < landmarks[3].y;
+
+
+    if(thumb && !index && !middle && !ring && !pinky){
+
+        return {
+            name:"👍 Thumbs Up",
+            confidence:95
+        };
+
+    }
+
+
+    if(index && middle && ring && pinky){
+
+        return {
+            name:"✋ Open Palm",
+            confidence:92
+        };
+
+    }
+
+
+    if(index && middle && !ring && !pinky){
+
+        return {
+            name:"✌️ Victory",
+            confidence:90
+        };
+
+    }
+
+
+    if(!index && !middle && !ring && !pinky){
+
+        return {
+            name:"✊ Fist",
+            confidence:88
+        };
+
+    }
+
+
+    return {
+        name:"Unknown",
+        confidence:0
+    };
+
+}
+
+
+
+// 6. Camera start code
+const camera = new Camera(video,{
+    onFrame: async()=>{
+        await hands.send({image:video});
+    },
+    width:640,
+    height:480
+});
+
+camera.start();
 async function detectHands(){
 
   async function frame(){
