@@ -35,7 +35,59 @@ hands.setOptions({
   minDetectionConfidence: 0.7,
   minTrackingConfidence: 0.7
 });
+hands.onResults((results)=>{
 
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.drawImage(
+        results.image,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    if(results.multiHandLandmarks.length > 0){
+
+        const landmarks = results.multiHandLandmarks[0];
+
+
+        drawConnectors(
+            ctx,
+            landmarks,
+            HAND_CONNECTIONS
+        );
+
+
+        drawLandmarks(
+            ctx,
+            landmarks
+        );
+
+
+        const result = recogniseGesture(landmarks);
+
+
+        gestureText.innerText = result.name;
+
+        confidenceText.innerText =
+            result.confidence + "%";
+
+
+    }
+
+    else {
+
+        gestureText.innerText =
+        "No Hand Detected";
+
+        confidenceText.innerText =
+        "0%";
+
+    }
+
+});
 hands.onResults((results) => {
 
   canvas.width = video.videoWidth;
