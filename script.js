@@ -91,8 +91,20 @@ hands.setOptions({
     minTrackingConfidence:0.7
 
 });
+// load ai model
+
+async function loadModel(){
+
+    gestureModel = await tf.loadLayersModel(
+        "model/model.json"
+    );
+
+    console.log("Gesture AI Model Loaded");
+
+}
 
 
+loadModel();
 
 // =================================
 // 4. HAND RESULTS
@@ -254,202 +266,66 @@ function speakGesture(gesture){
 // 6. GESTURE RECOGNITION
 // =================================
 
-
-function recogniseGesture(landmarks){
-
+async function recogniseGesture(landmarks){
 
 
-function recogniseGesture(landmarks){
-
-
-    let thumb =
-    landmarks[4].y < landmarks[3].y;
-
-
-    let index =
-    landmarks[8].y < landmarks[6].y;
-
-
-    let middle =
-    landmarks[12].y < landmarks[10].y;
-
-
-    let ring =
-    landmarks[16].y < landmarks[14].y;
-
-
-    let pinky =
-    landmarks[20].y < landmarks[18].y;
-
-
-
-    // 👍 Thumbs Up
-
-    if(
-        thumb &&
-        !index &&
-        !middle &&
-        !ring &&
-        !pinky
-    ){
+    if(!gestureModel){
 
         return {
-            name:"👍 Thumbs Up",
-            confidence:95
+            name:"Loading AI...",
+            confidence:0
         };
 
     }
 
 
 
-    // ✋ Open Palm / Stop
+    let input = [];
 
-    if(
-        index &&
-        middle &&
-        ring &&
-        pinky
-    ){
 
-        return {
-            name:"✋ Stop / Open Palm",
-            confidence:92
-        };
+    landmarks.forEach(point=>{
 
-    }
+        input.push(point.x);
+        input.push(point.y);
+        input.push(point.z);
+
+    });
 
 
 
-    // ✌️ Victory
+    const tensor =
+    tf.tensor([input]);
 
-    if(
-        index &&
-        middle &&
-        !ring &&
-        !pinky
-    ){
 
-        return {
-            name:"✌️ Victory",
-            confidence:90
-        };
-
-    }
+    const prediction =
+    gestureModel.predict(tensor);
 
 
 
-    // ✊ Fist
-
-    if(
-        !index &&
-        !middle &&
-        !ring &&
-        !pinky
-    ){
-
-        return {
-            name:"✊ Fist",
-            confidence:88
-        };
-
-    }
+    const data =
+    await prediction.data();
 
 
 
-    // ☝️ Point Finger
-
-    if(
-        index &&
-        !middle &&
-        !ring &&
-        !pinky
-    ){
-
-        return {
-            name:"☝️ Pointing",
-            confidence:87
-        };
-
-    }
-
-
-
-    // 🤟 Rock Sign
-
-    if(
-        index &&
-        pinky &&
-        !middle &&
-        !ring
-    ){
-
-        return {
-            name:"🤟 Rock Sign",
-            confidence:86
-        };
-
-    }
-
-
-
-    // 👌 OK Sign
-
-    let thumbIndexDistance =
-    Math.sqrt(
-        Math.pow(
-            landmarks[4].x - landmarks[8].x,
-            2
-        )
-        +
-        Math.pow(
-            landmarks[4].y - landmarks[8].y,
-            2
-        )
-    );
-
-
-    if(
-        thumbIndexDistance < 0.05 &&
-        middle &&
-        ring &&
-        pinky
-    ){
-
-        return {
-            name:"👌 OK Sign",
-            confidence:85
-        };
-
-    }
-
-
-
-    // 🤙 Call Me
-
-    if(
-        thumb &&
-        pinky &&
-        !index &&
-        !middle &&
-        !ring
-    ){
-
-        return {
-            name:"🤙 Call Me",
-            confidence:85
-        };
-
-    }
+    const index =
+    data.indexOf(Math.max(...data));
 
 
 
     return {
-        name:"Unknown",
-        confidence:0
+
+        name: gestureLabels[index],
+
+        confidence:
+        Math.round(data[index]*100)
+
     };
 
 
 }
+
+        
+
 // =================================
 // 7. DETECT HANDS
 // =================================
