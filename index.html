@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>AI Hand Gesture Recognition</title>
 
 <link rel="stylesheet" href="style.css">
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection"></script>
+<script type="module" src="app.js"></script>
 
 </head>
 
@@ -20,19 +18,13 @@
 
 <h1>🤖 AI Hand Gesture Recognition</h1>
 
-<div class="buttons">
+<div class="toolbar">
 
-<button id="themeBtn">
-🌙 Theme
-</button>
+<button id="themeBtn">🌙 Theme</button>
 
-<button id="fullscreenBtn">
-⛶ Full Screen
-</button>
+<button id="captureBtn">📸 Screenshot</button>
 
-<button id="captureBtn">
-📸 Screenshot
-</button>
+<button id="fullscreenBtn">⛶ Full Screen</button>
 
 </div>
 
@@ -40,49 +32,29 @@
 
 <main>
 
-<div class="camera">
+<div class="camera-container">
 
-<video
-id="video"
-autoplay
-playsinline
-muted>
-</video>
+<video id="video" autoplay playsinline></video>
 
 <canvas id="canvas"></canvas>
 
 </div>
 
-<section class="panel">
+<div class="sidebar">
 
 <h2>Detected Gesture</h2>
 
 <div id="gesture">
-
 Waiting...
-
 </div>
 
-<h2>Gesture History</h2>
+<h2>History</h2>
 
 <ul id="history"></ul>
 
-</section>
+</div>
 
 </main>
-
-<audio id="beep">
-<source src="assets/beep.mp3" type="audio/mpeg">
-</audio>
-
-<script src="history.js"></script>
-<script src="audio.js"></script>
-<script src="theme.js"></script>
-<script src="fullscreen.js"></script>
-<script src="screenshot.js"></script>
-<script src="gestures.js"></script>
-<script src="detector.js"></script>
-<script src="app.js"></script>
 
 </body>
 </html>
