@@ -247,6 +247,14 @@ function speakGesture(gesture){
 function recogniseGesture(landmarks){
 
 
+
+function recogniseGesture(landmarks){
+
+
+    let thumb =
+    landmarks[4].y < landmarks[3].y;
+
+
     let index =
     landmarks[8].y < landmarks[6].y;
 
@@ -263,11 +271,8 @@ function recogniseGesture(landmarks){
     landmarks[20].y < landmarks[18].y;
 
 
-    let thumb =
-    landmarks[4].y < landmarks[3].y;
 
-
-
+    // 👍 Thumbs Up
 
     if(
         thumb &&
@@ -278,17 +283,15 @@ function recogniseGesture(landmarks){
     ){
 
         return {
-
             name:"👍 Thumbs Up",
-
             confidence:95
-
         };
 
     }
 
 
 
+    // ✋ Open Palm / Stop
 
     if(
         index &&
@@ -298,17 +301,15 @@ function recogniseGesture(landmarks){
     ){
 
         return {
-
-            name:"✋ Open Palm",
-
+            name:"✋ Stop / Open Palm",
             confidence:92
-
         };
 
     }
 
 
 
+    // ✌️ Victory
 
     if(
         index &&
@@ -318,17 +319,15 @@ function recogniseGesture(landmarks){
     ){
 
         return {
-
             name:"✌️ Victory",
-
             confidence:90
-
         };
 
     }
 
 
 
+    // ✊ Fist
 
     if(
         !index &&
@@ -338,11 +337,95 @@ function recogniseGesture(landmarks){
     ){
 
         return {
-
             name:"✊ Fist",
-
             confidence:88
+        };
 
+    }
+
+
+
+    // ☝️ Point Finger
+
+    if(
+        index &&
+        !middle &&
+        !ring &&
+        !pinky
+    ){
+
+        return {
+            name:"☝️ Pointing",
+            confidence:87
+        };
+
+    }
+
+
+
+    // 🤟 Rock Sign
+
+    if(
+        index &&
+        pinky &&
+        !middle &&
+        !ring
+    ){
+
+        return {
+            name:"🤟 Rock Sign",
+            confidence:86
+        };
+
+    }
+
+
+
+    // 👌 OK Sign
+
+    let thumbIndexDistance =
+    Math.sqrt(
+        Math.pow(
+            landmarks[4].x - landmarks[8].x,
+            2
+        )
+        +
+        Math.pow(
+            landmarks[4].y - landmarks[8].y,
+            2
+        )
+    );
+
+
+    if(
+        thumbIndexDistance < 0.05 &&
+        middle &&
+        ring &&
+        pinky
+    ){
+
+        return {
+            name:"👌 OK Sign",
+            confidence:85
+        };
+
+    }
+
+
+
+    // 🤙 Call Me
+
+    if(
+        thumb &&
+        pinky &&
+        !index &&
+        !middle &&
+        !ring
+    ){
+
+        return {
+            name:"🤙 Call Me",
+            confidence:85
         };
 
     }
@@ -350,19 +433,12 @@ function recogniseGesture(landmarks){
 
 
     return {
-
         name:"Unknown",
-
         confidence:0
-
     };
 
 
 }
-
-
-
-
 // =================================
 // 7. DETECT HANDS
 // =================================
