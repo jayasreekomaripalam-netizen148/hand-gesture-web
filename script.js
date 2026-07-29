@@ -1,3 +1,14 @@
+//add model variables 
+let gestureModel = null;
+
+const gestureLabels = [
+    "Fist",
+    "Open Palm",
+    "Thumbs Up",
+    "Victory",
+    "Pointing",
+    "OK Sign"
+];
 // =================================
 // 1. HTML ELEMENT SELECTION
 // =================================
