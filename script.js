@@ -473,7 +473,50 @@ if("serviceWorker" in navigator){
     });
 
 }
+    // install logic
+let deferredPrompt;
 
+
+window.addEventListener(
+"beforeinstallprompt",
+(e)=>{
+
+    e.preventDefault();
+
+    deferredPrompt = e;
+
+});
+
+
+
+const installBtn = document.getElementById("installBtn");
+
+
+if(installBtn){
+
+    installBtn.onclick = async()=>{
+
+
+        if(deferredPrompt){
+
+
+            deferredPrompt.prompt();
+
+
+            const result = await deferredPrompt.userChoice;
+
+
+            console.log(result.outcome);
+
+
+            deferredPrompt = null;
+
+
+        }
+
+    };
+
+}
 // =================================
 // 8. START CAMERA
 // =================================
