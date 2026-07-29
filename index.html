@@ -8,7 +8,10 @@
 
 <link rel="stylesheet" href="style.css">
 
-<script type="module" src="app.js"></script>
+<!-- MediaPipe Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 
 </head>
 
@@ -34,7 +37,12 @@
 
 <div class="camera-container">
 
-<video id="video" autoplay playsinline></video>
+<video
+id="video"
+autoplay
+playsinline
+muted>
+</video>
 
 <canvas id="canvas"></canvas>
 
@@ -48,13 +56,22 @@
 Waiting...
 </div>
 
-<h2>History</h2>
+<h2>Gesture History</h2>
 
 <ul id="history"></ul>
 
 </div>
 
 </main>
+
+<!-- JavaScript Files -->
+<script src="history.js"></script>
+<script src="audio.js"></script>
+<script src="theme.js"></script>
+<script src="fullscreen.js"></script>
+<script src="screenshot.js"></script>
+<script src="gestureRecognizer.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
