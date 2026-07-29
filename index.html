@@ -1,40 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Hand Gesture Recognition</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <!-- MediaPipe -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<title>AI Hand Gesture Recognition</title>
 
-    <!-- Fingerpose -->
-    <script src="https://cdn.jsdelivr.net/npm/fingerpose@0.1.0/dist/fingerpose.min.js"></script>
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection"></script>
+
 </head>
 
 <body>
 
-<div class="container">
+<header>
 
-    <h1>🤖 AI Hand Gesture Recognition</h1>
+<h1>🤖 AI Hand Gesture Recognition</h1>
 
-    <video id="video" autoplay playsinline></video>
+<div class="buttons">
 
-    <canvas id="canvas"></canvas>
+<button id="themeBtn">
+🌙 Theme
+</button>
 
-    <div class="gesture-box">
-        <h2>Detected Gesture</h2>
-        <h3 id="gesture">Waiting...</h3>
-    </div>
+<button id="fullscreenBtn">
+⛶ Full Screen
+</button>
+
+<button id="captureBtn">
+📸 Screenshot
+</button>
 
 </div>
 
+</header>
+
+<main>
+
+<div class="camera">
+
+<video
+id="video"
+autoplay
+playsinline
+muted>
+</video>
+
+<canvas id="canvas"></canvas>
+
+</div>
+
+<section class="panel">
+
+<h2>Detected Gesture</h2>
+
+<div id="gesture">
+
+Waiting...
+
+</div>
+
+<h2>Gesture History</h2>
+
+<ul id="history"></ul>
+
+</section>
+
+</main>
+
+<audio id="beep">
+<source src="assets/beep.mp3" type="audio/mpeg">
+</audio>
+
+<script src="history.js"></script>
+<script src="audio.js"></script>
+<script src="theme.js"></script>
+<script src="fullscreen.js"></script>
+<script src="screenshot.js"></script>
 <script src="gestures.js"></script>
-<script src="script.js"></script>
+<script src="detector.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
