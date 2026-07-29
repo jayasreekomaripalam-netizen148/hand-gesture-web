@@ -1,65 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Hand Gesture Recognition</title>
 
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- MediaPipe -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<title>AI Hand Gesture Recognition</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- MediaPipe -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+
 </head>
 
 <body>
 
 <header>
-  <h1>🤖 AI Hand Gesture Recognition</h1>
 
-  <div class="toolbar">
-    <button id="themeBtn">🌙 Theme</button>
-    <button id="captureBtn">📸 Screenshot</button>
-    <button id="fullscreenBtn">⛶ Full Screen</button>
-  </div>
+<h1>🤖 AI Hand Gesture Recognition</h1>
+
+<div class="toolbar">
+
+<button id="themeBtn">🌙 Theme</button>
+
+<button id="captureBtn">📸 Screenshot</button>
+
+<button id="fullscreenBtn">⛶ Full Screen</button>
+
+</div>
+
 </header>
 
 <main>
 
-  <div class="camera-container">
-    <video
-      id="video"
-      autoplay
-      playsinline
-      muted>
-    </video>
+<div class="camera-container">
 
-    <canvas id="canvas"></canvas>
-  </div>
+<video
+id="video"
+autoplay
+playsinline
+muted>
+</video>
 
-  <div class="sidebar">
+<canvas id="canvas"></canvas>
 
-    <h2>Detected Gesture</h2>
-    <div id="gesture">
-      Waiting...
-    </div>
+</div>
 
-    <h2>Gesture History</h2>
-    <ul id="history"></ul>
+<div class="sidebar">
 
-  </div>
+<h2>Detected Gesture</h2>
+
+<div id="gesture">
+Waiting...
+</div>
+
+<h2>Gesture History</h2>
+
+<ul id="history"></ul>
+
+</div>
 
 </main>
 
-<!-- Your JavaScript files -->
 <script src="gestureRecognizer.js"></script>
 <script src="history.js"></script>
 <script src="audio.js"></script>
 <script src="theme.js"></script>
 <script src="fullscreen.js"></script>
 <script src="screenshot.js"></script>
+<script src="settings.js"></script>
 <script src="app.js"></script>
 
 </body>
+
 </html>
