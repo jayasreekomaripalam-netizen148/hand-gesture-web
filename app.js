@@ -21,14 +21,18 @@ function onResults(results) {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
-  if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-    gestureBox.textContent = `Hands Detected: ${results.multiHandLandmarks.length}`;
+  if (results.multiHandLandmarks &&
+      results.multiHandLandmarks.length > 0) {
+
+    gestureBox.innerHTML =
+      "Hands Detected: " +
+      results.multiHandLandmarks.length;
 
     for (const landmarks of results.multiHandLandmarks) {
+
       drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
         color: "#00FF00",
         lineWidth: 4
@@ -39,16 +43,18 @@ function onResults(results) {
         radius: 5
       });
 
-      // Gesture recognition will be added later
-      // const gesture = recogniseGesture(landmarks);
-      // gestureBox.textContent = gesture;
-      // addGestureHistory(gesture);
+      // When gestureRecognizer.js is ready:
+      // const gestureName = recogniseGesture(landmarks);
+      // gestureBox.innerHTML = gestureName;
+      // addGestureHistory(gestureName);
+      // playGestureAudio(gestureName);
     }
-  } else {
-    gestureBox.textContent = "No Hands";
-  }
 
-  ctx.restore();
+  } else {
+
+    gestureBox.innerHTML = "No Hands";
+
+  }
 }
 
 const camera = new Camera(video, {
