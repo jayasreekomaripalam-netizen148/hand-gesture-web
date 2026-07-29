@@ -61,6 +61,10 @@ function onResults(results) {
                 if (typeof playGestureAudio === "function") {
                     playGestureAudio(gestureName);
                 }
+                    if (typeof performGestureAction === "function") {
+    performGestureAction(gestureName);
+                    }
+                
 
             }
 
