@@ -51,9 +51,7 @@ function onResults(results) {
             if (typeof recogniseGesture === "function") {
 
                 const gestureName = recogniseGesture(landmarks);
-
-                gestureBox.innerHTML = gestureName;
-
+updateConfidence(gestureName);
                 if (typeof addGestureHistory === "function") {
                     addGestureHistory(gestureName);
                 }
