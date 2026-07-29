@@ -1,3 +1,5 @@
+const gestureText = document.getElementById("gesture");
+const confidenceText = document.getElementById("confidence");
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
