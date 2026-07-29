@@ -18,51 +18,73 @@ hands.setOptions({
 hands.onResults(onResults);
 
 function onResults(results) {
+
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
+  ctx.save();
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
   if (results.multiHandLandmarks &&
       results.multiHandLandmarks.length > 0) {
 
-    gestureBox.innerHTML =
-      "Hands Detected: " +
-      results.multiHandLandmarks.length;
-
     for (const landmarks of results.multiHandLandmarks) {
 
-      drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
-        color: "#00FF00",
-        lineWidth: 4
-      });
+      drawConnectors(
+        ctx,
+        landmarks,
+        HAND_CONNECTIONS,
+        {
+          color: "#00FF00",
+          lineWidth: 4
+        }
+      );
 
-      drawLandmarks(ctx, landmarks, {
-        color: "#FF0000",
-        radius: 5
-      });
+      drawLandmarks(
+        ctx,
+        landmarks,
+        {
+          color: "#FF0000",
+          radius: 5
+        }
+      );
 
-      // When gestureRecognizer.js is ready:
-      // const gestureName = recogniseGesture(landmarks);
-      // gestureBox.innerHTML = gestureName;
-      // addGestureHistory(gestureName);
-      // playGestureAudio(gestureName);
+      const gestureName = recogniseGesture(landmarks);
+
+      gestureBox.innerHTML = gestureName;
+
+      addGestureHistory(gestureName);
+
+      playGestureAudio(gestureName);
+
     }
 
   } else {
 
-    gestureBox.innerHTML = "No Hands";
+    gestureBox.innerHTML = "No Hands Detected";
 
   }
+
+  ctx.restore();
+
 }
 
 const camera = new Camera(video, {
+
   onFrame: async () => {
-    await hands.send({ image: video });
+
+    await hands.send({
+      image: video
+    });
+
   },
+
   width: 1280,
   height: 720
+
 });
 
 camera.start();
