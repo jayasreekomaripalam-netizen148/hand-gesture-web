@@ -76,3 +76,6 @@ function onResults(results) {
 
 // Uses startCamera() from camera.js
 startCamera(hands, video);
+const cameraBtn = document.getElementById("cameraBtn");
+
+cameraBtn.addEventListener("click", switchCamera);
