@@ -1,12 +1,11 @@
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const gesture = document.getElementById("gesture");
+const gestureBox = document.getElementById("gesture");
 
 const hands = new Hands({
-  locateFile: (file) => {
-    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-  }
+  locateFile: (file) =>
+    `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
 });
 
 hands.setOptions({
@@ -19,57 +18,46 @@ hands.setOptions({
 hands.onResults(onResults);
 
 function onResults(results) {
-
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+  if (results.multiHandLandmarks &&
+      results.multiHandLandmarks.length > 0) {
 
-  if(results.multiHandLandmarks){
-
-    gesture.innerHTML =
-      "Hands Detected : " +
+    gestureBox.innerHTML =
+      "Hands Detected: " +
       results.multiHandLandmarks.length;
 
-    for(const landmarks of results.multiHandLandmarks){
+    for (const landmarks of results.multiHandLandmarks) {
 
-      drawConnectors(
-        ctx,
-        landmarks,
-        HAND_CONNECTIONS,
-        {
-          color:"#00FF00",
-          lineWidth:4
-        }
-      );
+      drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+        color: "#00FF00",
+        lineWidth: 4
+      });
 
-      drawLandmarks(
-        ctx,
-        landmarks,
-        {
-          color:"#FF0000",
-          radius:5
-        }
-      );
+      drawLandmarks(ctx, landmarks, {
+        color: "#FF0000",
+        radius: 5
+      });
 
     }
 
-  }else{
+  } else {
 
-    gesture.innerHTML="No Hands";
+    gestureBox.innerHTML = "No Hands";
 
   }
-
 }
 
-const camera = new Camera(video,{
-  onFrame: async()=>{
-    await hands.send({image:video});
+const camera = new Camera(video, {
+  onFrame: async () => {
+    await hands.send({ image: video });
   },
-  width:1280,
-  height:720
+  width: 1280,
+  height: 720
 });
 
 camera.start();
