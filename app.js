@@ -4,87 +4,111 @@ const ctx = canvas.getContext("2d");
 const gestureBox = document.getElementById("gesture");
 
 const hands = new Hands({
-  locateFile: (file) =>
-    `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }
 });
 
 hands.setOptions({
-  maxNumHands: 2,
-  modelComplexity: 1,
-  minDetectionConfidence: 0.7,
-  minTrackingConfidence: 0.7
+    maxNumHands: 2,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.7
 });
 
 hands.onResults(onResults);
 
 function onResults(results) {
 
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-  ctx.save();
+    ctx.save();
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
-  if (results.multiHandLandmarks &&
-      results.multiHandLandmarks.length > 0) {
+    if (results.multiHandLandmarks &&
+        results.multiHandLandmarks.length > 0) {
 
-    for (const landmarks of results.multiHandLandmarks) {
+        gestureBox.innerHTML =
+            "Hands Detected : " +
+            results.multiHandLandmarks.length;
 
-      drawConnectors(
-        ctx,
-        landmarks,
-        HAND_CONNECTIONS,
-        {
-          color: "#00FF00",
-          lineWidth: 4
-        }
-      );
+        results.multiHandLandmarks.forEach((landmarks) => {
 
-      drawLandmarks(
-        ctx,
-        landmarks,
-        {
-          color: "#FF0000",
-          radius: 5
-        }
-      );
+            drawConnectors(
+                ctx,
+                landmarks,
+                HAND_CONNECTIONS,
+                {
+                    color: "#00FF00",
+                    lineWidth: 4
+                }
+            );
 
-      const gestureName = recogniseGesture(landmarks);
+            drawLandmarks(
+                ctx,
+                landmarks,
+                {
+                    color: "#FF0000",
+                    radius: 5
+                }
+            );
 
-      gestureBox.innerHTML = gestureName;
+            if (typeof recogniseGesture === "function") {
 
-      addGestureHistory(gestureName);
+                const gestureName =
+                    recogniseGesture(landmarks);
 
-      playGestureAudio(gestureName);
+                gestureBox.innerHTML = gestureName;
+
+                if (typeof addGestureHistory === "function") {
+
+                    addGestureHistory(gestureName);
+
+                }
+
+                if (typeof playGestureAudio === "function") {
+
+                    playGestureAudio(gestureName);
+
+                }
+
+            }
+
+        });
+
+    } else {
+
+        gestureBox.innerHTML = "No Hand Detected";
 
     }
 
-  } else {
-
-    gestureBox.innerHTML = "No Hands Detected";
-
-  }
-
-  ctx.restore();
+    ctx.restore();
 
 }
 
-const camera = new Camera(video, {
+async function startCamera() {
 
-  onFrame: async () => {
+    const camera = new Camera(video, {
 
-    await hands.send({
-      image: video
+        onFrame: async () => {
+
+            await hands.send({
+                image: video
+            });
+
+        },
+
+        width: 1280,
+        height: 720
+
     });
 
-  },
+    camera.start();
 
-  width: 1280,
-  height: 720
+}
 
-});
-
-camera.start();
+startCamera();
