@@ -4,9 +4,8 @@ const ctx = canvas.getContext("2d");
 const gestureBox = document.getElementById("gesture");
 
 const hands = new Hands({
-    locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    }
+    locateFile: (file) =>
+        `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
 });
 
 hands.setOptions({
@@ -23,8 +22,6 @@ function onResults(results) {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    ctx.save();
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
@@ -32,48 +29,37 @@ function onResults(results) {
     if (results.multiHandLandmarks &&
         results.multiHandLandmarks.length > 0) {
 
-        gestureBox.innerHTML =
-            "Hands Detected : " +
-            results.multiHandLandmarks.length;
-
         results.multiHandLandmarks.forEach((landmarks) => {
 
-            drawConnectors(
-                ctx,
-                landmarks,
-                HAND_CONNECTIONS,
-                {
-                    color: "#00FF00",
-                    lineWidth: 4
-                }
-            );
+            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+                color: "#00FF00",
+                lineWidth: 4
+            });
 
-            drawLandmarks(
-                ctx,
-                landmarks,
-                {
-                    color: "#FF0000",
-                    radius: 5
-                }
-            );
+            drawLandmarks(ctx, landmarks, {
+                color: "#FF0000",
+                radius: 5
+            });
+
+            if (typeof moveVirtualCursor === "function") {
+                moveVirtualCursor(
+                    landmarks[8].x,
+                    landmarks[8].y
+                );
+            }
 
             if (typeof recogniseGesture === "function") {
 
-                const gestureName =
-                    recogniseGesture(landmarks);
+                const gestureName = recogniseGesture(landmarks);
 
                 gestureBox.innerHTML = gestureName;
 
                 if (typeof addGestureHistory === "function") {
-
                     addGestureHistory(gestureName);
-
                 }
 
                 if (typeof playGestureAudio === "function") {
-
                     playGestureAudio(gestureName);
-
                 }
 
             }
@@ -86,27 +72,7 @@ function onResults(results) {
 
     }
 
-    ctx.restore();
-
 }
 
-async function startCamera() {
-
-    const camera = new Camera(video, {
-
-        onFrame: async () => {
-
-            await hands.send({
-                image: video
-            });
-
-        },
-
-        width: 1280,
-        height: 720
-
-    });
+// Uses startCamera() from camera.js
 startCamera(hands, video);
-}
-
-startCamera();
