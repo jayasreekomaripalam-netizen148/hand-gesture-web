@@ -1,34 +1,35 @@
-function isFingerOpen(tip, pip) {
-  return tip.y < pip.y;
+function fingerExtended(landmarks, tip, pip) {
+    return landmarks[tip].y < landmarks[pip].y;
 }
 
 function recogniseGesture(landmarks) {
-  const thumbTip = landmarks[4];
-  const indexTip = landmarks[8];
-  const indexPip = landmarks[6];
-  const middleTip = landmarks[12];
-  const middlePip = landmarks[10];
-  const ringTip = landmarks[16];
-  const ringPip = landmarks[14];
-  const pinkyTip = landmarks[20];
-  const pinkyPip = landmarks[18];
 
-  const indexOpen = isFingerOpen(indexTip, indexPip);
-  const middleOpen = isFingerOpen(middleTip, middlePip);
-  const ringOpen = isFingerOpen(ringTip, ringPip);
-  const pinkyOpen = isFingerOpen(pinkyTip, pinkyPip);
+    const thumb = landmarks[4].x < landmarks[3].x;
 
-  if (indexOpen && middleOpen && ringOpen && pinkyOpen) {
-    return "🖐️ Open Palm";
-  }
+    const index = fingerExtended(landmarks, 8, 6);
+    const middle = fingerExtended(landmarks, 12, 10);
+    const ring = fingerExtended(landmarks, 16, 14);
+    const pinky = fingerExtended(landmarks, 20, 18);
 
-  if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
-    return "✊ Fist";
-  }
+    if (index && middle && ring && pinky) {
+        return "🖐️ Open Palm";
+    }
 
-  if (indexOpen && middleOpen && !ringOpen && !pinkyOpen) {
-    return "✌️ Peace";
-  }
+    if (!index && !middle && !ring && !pinky) {
+        return "✊ Fist";
+    }
 
-  return "Unknown";
+    if (index && middle && !ring && !pinky) {
+        return "✌️ Peace";
+    }
+
+    if (index && !middle && !ring && !pinky) {
+        return "☝️ Pointing Up";
+    }
+
+    if (thumb && !index && !middle && !ring && !pinky) {
+        return "👍 Thumbs Up";
+    }
+
+    return "🤚 Unknown Gesture";
 }
