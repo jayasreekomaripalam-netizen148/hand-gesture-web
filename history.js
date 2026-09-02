@@ -1,42 +1,146 @@
-const historyList = document.getElementById("history");
+// ============================================
+// HandPuzzle Pro
+// Gesture History
+// ============================================
+
+
+const historyList =
+    document.getElementById(
+        "history"
+    );
+
 
 let gestureHistory = [];
 
-function addGestureHistory(gestureName) {
 
-    if (!gestureName) return;
+// ============================================
+// ADD GESTURE
+// ============================================
 
-    if (gestureHistory.length > 0 &&
-        gestureHistory[gestureHistory.length - 1] === gestureName) {
+function addGestureHistory(
+    gestureName
+) {
+
+    if (!gestureName) {
+
         return;
+
     }
 
-    gestureHistory.push(gestureName);
 
-    if (gestureHistory.length > 30) {
+    // ========================================
+    // Prevent duplicate consecutive gestures
+    // ========================================
+
+    if (
+
+        gestureHistory.length > 0 &&
+
+        gestureHistory[
+            gestureHistory.length - 1
+        ] === gestureName
+
+    ) {
+
+        return;
+
+    }
+
+
+    // ========================================
+    // Add
+    // ========================================
+
+    gestureHistory.push(
+        gestureName
+    );
+
+
+    // ========================================
+    // Maximum 30
+    // ========================================
+
+    if (
+        gestureHistory.length > 30
+    ) {
+
         gestureHistory.shift();
+
     }
 
-    historyList.innerHTML = "";
 
-    [...gestureHistory].reverse().forEach((gesture) => {
+    // ========================================
+    // Update UI
+    // ========================================
 
-        const item = document.createElement("li");
-
-        const time = new Date().toLocaleTimeString();
-
-        item.textContent = `${time} — ${gesture}`;
-
-        historyList.appendChild(item);
-
-    });
+    renderGestureHistory();
 
 }
+
+
+// ============================================
+// RENDER HISTORY
+// ============================================
+
+function renderGestureHistory() {
+
+    if (!historyList) {
+
+        return;
+
+    }
+
+
+    historyList.innerHTML =
+        "";
+
+
+    [
+        ...gestureHistory
+    ]
+        .reverse()
+        .forEach(
+            (gesture) => {
+
+                const item =
+                    document.createElement(
+                        "li"
+                    );
+
+
+                const time =
+                    new Date()
+                        .toLocaleTimeString();
+
+
+                item.textContent =
+                    `${time} — ${gesture}`;
+
+
+                historyList.appendChild(
+                    item
+                );
+
+            }
+        );
+
+}
+
+
+// ============================================
+// CLEAR HISTORY
+// ============================================
 
 function clearGestureHistory() {
 
     gestureHistory = [];
 
-    historyList.innerHTML = "";
+
+    if (historyList) {
+
+        historyList.innerHTML =
+            "";
+
+    }
 
 }

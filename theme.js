@@ -1,30 +1,102 @@
-const themeButton = document.getElementById("themeBtn");
+// ============================================
+// HandPuzzle Pro
+// Dark / Light Theme
+// ============================================
 
-const savedTheme = localStorage.getItem("theme");
+const themeButton =
+    document.getElementById("themeBtn");
+
+
+// ============================================
+// LOAD SAVED THEME
+// ============================================
+
+const savedTheme =
+    localStorage.getItem("theme");
+
 
 if (savedTheme === "light") {
+
     document.body.classList.add("light");
-    themeButton.innerHTML = "🌞 Light";
+
 } else {
-    themeButton.innerHTML = "🌙 Dark";
+
+    document.body.classList.remove("light");
+
 }
 
-themeButton.addEventListener("click", () => {
 
-    document.body.classList.toggle("light");
+// ============================================
+// UPDATE BUTTON TEXT
+// ============================================
 
-    if (document.body.classList.contains("light")) {
+function updateThemeButton() {
 
-        localStorage.setItem("theme", "light");
+    if (!themeButton) {
+        return;
+    }
 
-        themeButton.innerHTML = "🌞 Light";
+    if (
+        document.body.classList.contains("light")
+    ) {
+
+        themeButton.textContent =
+            "🌞 Light Mode";
 
     } else {
 
-        localStorage.setItem("theme", "dark");
-
-        themeButton.innerHTML = "🌙 Dark";
+        themeButton.textContent =
+            "🌙 Dark Mode";
 
     }
 
-});
+}
+
+
+// Initial button state
+updateThemeButton();
+
+
+// ============================================
+// THEME BUTTON
+// ============================================
+
+if (themeButton) {
+
+    themeButton.addEventListener(
+        "click",
+        () => {
+
+            document.body.classList.toggle(
+                "light"
+            );
+
+
+            if (
+                document.body.classList.contains(
+                    "light"
+                )
+            ) {
+
+                localStorage.setItem(
+                    "theme",
+                    "light"
+                );
+
+            } else {
+
+                localStorage.setItem(
+                    "theme",
+                    "dark"
+                );
+
+            }
+
+
+            updateThemeButton();
+
+        }
+    );
+
+}
+

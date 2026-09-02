@@ -4,71 +4,107 @@ const ctx = canvas.getContext("2d");
 
 let detector;
 
+// Make latest detected hands available to other modules
+let currentHands = [];
+
 async function setupCamera() {
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      facingMode: "user",
-      width: 1280,
-      height: 720
-    }
-  });
 
-  video.srcObject = stream;
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: "user",
+            width: 1280,
+            height: 720
+        }
+    });
 
-  return new Promise((resolve) => {
-    video.onloadedmetadata = () => {
-      video.play();
-      resolve(video);
-    };
-  });
+    video.srcObject = stream;
+
+    return new Promise((resolve) => {
+
+        video.onloadedmetadata = () => {
+
+            video.play();
+
+            resolve(video);
+
+        };
+
+    });
+
 }
 
 async function createDetector() {
 
-  detector = await handPoseDetection.createDetector(
-    handPoseDetection.SupportedModels.MediaPipeHands,
-    {
-      runtime: "tfjs",
-      modelType: "full",
-      maxHands: 2
-    }
-  );
+    detector = await handPoseDetection.createDetector(
+
+        handPoseDetection.SupportedModels.MediaPipeHands,
+
+        {
+            runtime: "tfjs",
+            modelType: "full",
+            maxHands: 2
+        }
+
+    );
 
 }
 
 async function detectHands() {
 
-  const hands = await detector.estimateHands(video);
+    const hands = await detector.estimateHands(video);
 
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+    // Share detected hands with other modules
+    currentHands = hands;
 
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-  if(hands.length>0){
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-      hands.forEach(hand=>{
+    if (hands.length > 0) {
 
-          hand.keypoints.forEach(point=>{
+        hands.forEach(hand => {
 
-              ctx.beginPath();
-              ctx.arc(point.x,point.y,5,0,2*Math.PI);
-              ctx.fillStyle="#00ff00";
-              ctx.fill();
+            hand.keypoints.forEach(point => {
 
-          });
+                ctx.beginPath();
 
-      });
+                ctx.arc(
+                    point.x,
+                    point.y,
+                    5,
+                    0,
+                    2 * Math.PI
+                );
 
-  }
+                ctx.fillStyle = "#00ff00";
 
-  requestAnimationFrame(detectHands);
+                ctx.fill();
+
+            });
+
+        });
+
+    }
+
+    requestAnimationFrame(detectHands);
 
 }
 
-async function startDetector(){
+async function startDetector() {
 
     await setupCamera();
 
@@ -79,3 +115,4 @@ async function startDetector(){
 }
 
 startDetector();
+

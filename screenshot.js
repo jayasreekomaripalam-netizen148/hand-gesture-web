@@ -1,41 +1,150 @@
-const captureBtn = document.getElementById("captureBtn");
+// ============================================
+// HandPuzzle Pro
+// Screenshot Controller
+// ============================================
 
-captureBtn.addEventListener("click", captureScreenshot);
+const captureButton =
+    document.getElementById("captureBtn");
+
+
+// ============================================
+// CAPTURE SCREENSHOT
+// ============================================
 
 function captureScreenshot() {
 
-    const screenshotCanvas = document.createElement("canvas");
+    if (!canvas) {
 
-    screenshotCanvas.width = canvas.width;
-    screenshotCanvas.height = canvas.height;
+        console.error(
+            "HandPuzzle Pro: Canvas not found"
+        );
 
-    const screenshotCtx = screenshotCanvas.getContext("2d");
+        return;
 
-    screenshotCtx.drawImage(canvas, 0, 0);
+    }
 
-    const image = screenshotCanvas.toDataURL("image/png");
 
-    const link = document.createElement("a");
+    if (
+        canvas.width === 0 ||
+        canvas.height === 0
+    ) {
 
-    const date = new Date();
+        console.warn(
+            "HandPuzzle Pro: Canvas is empty"
+        );
+
+        return;
+
+    }
+
+
+    const screenshotCanvas =
+        document.createElement("canvas");
+
+
+    screenshotCanvas.width =
+        canvas.width;
+
+    screenshotCanvas.height =
+        canvas.height;
+
+
+    const screenshotContext =
+        screenshotCanvas.getContext("2d");
+
+
+    // Draw the current camera/landmark canvas
+    screenshotContext.drawImage(
+        canvas,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    const image =
+        screenshotCanvas.toDataURL(
+            "image/png"
+        );
+
+
+    const link =
+        document.createElement("a");
+
+
+    const now =
+        new Date();
+
 
     const fileName =
-        "gesture_" +
-        date.getFullYear() + "-" +
-        String(date.getMonth() + 1).padStart(2, "0") + "-" +
-        String(date.getDate()).padStart(2, "0") + "_" +
-        String(date.getHours()).padStart(2, "0") + "-" +
-        String(date.getMinutes()).padStart(2, "0") + "-" +
-        String(date.getSeconds()).padStart(2, "0") +
+        "HandPuzzle_Pro_" +
+        now.getFullYear() +
+        "-" +
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            now.getDate()
+        ).padStart(2, "0") +
+        "_" +
+        String(
+            now.getHours()
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            now.getMinutes()
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            now.getSeconds()
+        ).padStart(2, "0") +
         ".png";
 
-    link.href = image;
-    link.download = fileName;
 
-    document.body.appendChild(link);
+    link.href = image;
+
+    link.download =
+        fileName;
+
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
-    document.body.removeChild(link);
+
+    document.body.removeChild(
+        link
+    );
+
+
+    console.log(
+        "HandPuzzle Pro: Screenshot saved:",
+        fileName
+    );
+
+}
+
+
+// ============================================
+// BUTTON
+// ============================================
+
+if (captureButton) {
+
+    captureButton.addEventListener(
+        "click",
+        captureScreenshot
+    );
+
+} else {
+
+    console.warn(
+        "HandPuzzle Pro: captureBtn not found"
+    );
 
 }

@@ -3,98 +3,303 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>AI Hand Gesture Recognition</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
-<!-- MediaPipe -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>HandPuzzle Pro</title>
+
+
+    <!-- ========================================= -->
+    <!-- MEDIAPIPE -->
+    <!-- ========================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+
+
+    <!-- ========================================= -->
+    <!-- STYLE -->
+    <!-- ========================================= -->
+
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<header>
 
-<h1>🤖 AI Hand Gesture Recognition</h1>
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
 
-<div class="toolbar">
+    <header class="header">
 
-<button id="themeBtn">🌙 Theme</button>
+        <h1>🖐️ HandPuzzle Pro</h1>
 
-<button id="captureBtn">📸 Screenshot</button>
-<button id="installBtn">
-📱 Install App
-</button>
-<button id="fullscreenBtn">⛶ Full Screen</button>
-<button id="cameraBtn">📷 Switch Camera</button>
-</div>
+        <p>
+            AI Hand Gesture Recognition
+        </p>
 
-</header>
+    </header>
 
-<main>
 
-<div class="camera-container">
+    <!-- ========================================= -->
+    <!-- CONTROLS -->
+    <!-- ========================================= -->
 
-<video
-id="video"
-autoplay
-playsinline
-muted>
-</video>
+    <div class="controls">
 
-<canvas id="canvas"></canvas>
+        <button id="themeBtn">
+            🌙 Dark Mode
+        </button>
 
-</div>
+        <button id="fullscreenBtn">
+            ⛶ Full Screen
+        </button>
 
-<div class="sidebar">
+        <button id="captureBtn">
+            📸 Screenshot
+        </button>
 
-<h2>Detected Gesture</h2>
+        <button id="cameraBtn">
+            📷 Switch Camera
+        </button>
 
-<div class="gesture-display">
+    </div>
 
-    <h2 id="gesture">
-        Waiting for gesture...
-    </h2>
 
-    <h3>
-        Confidence:
-        <span id="confidence">0%</span>
-    </h3>
+    <!-- ========================================= -->
+    <!-- MAIN CAMERA AREA -->
+    <!-- ========================================= -->
 
-</div>
+    <main class="main">
 
-<h2>Gesture History</h2>
 
-<ul id="history"></ul>
+        <section class="camera-section">
 
-</div>
 
-</main>
-<script src="utils.js"></script>
-<script src="gestureRecognizer.js"></script>
-<script src="history.js"></script>
-<script src="audio.js"></script>
-<script src="theme.js"></script>
-<script src="fullscreen.js"></script>
-<script src="screenshot.js"></script>
-<script src="settings.js"></script>
-  <script src="fps.js"></script>
-  <script src="camera.js"></script>
-  <script src="mouseControl.js"></script>
-  <script src="cameraSwitch.js"></script>
-<script src="app.js"></script>
-  <script src="gestureControl.js"></script>
-<script src="app.js"></script>
-  <script src="confidence.js"></script>
-<script src="app.js"></script>
-<script src="app.js"></script>
+            <div class="camera-container">
+
+
+                <!-- CAMERA VIDEO -->
+
+                <video
+                    id="video"
+                    autoplay
+                    muted
+                    playsinline
+                ></video>
+
+
+                <!-- LANDMARK CANVAS -->
+
+                <canvas
+                    id="canvas"
+                ></canvas>
+
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- GESTURE RESULT -->
+            <!-- ================================= -->
+
+            <div class="result-card">
+
+                <h2>
+                    Detected Gesture
+                </h2>
+
+                <div
+                    id="gesture"
+                    class="gesture"
+                >
+                    Starting camera...
+                </div>
+
+
+                <div
+                    id="confidence"
+                    class="confidence"
+                >
+                    Confidence: 0%
+                </div>
+
+
+                <div
+                    id="actionMessage"
+                    class="action-message"
+                    style="display:none;"
+                ></div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ===================================== -->
+        <!-- SIDEBAR -->
+        <!-- ===================================== -->
+
+        <aside class="sidebar">
+
+
+            <h2>
+                Gesture History
+            </h2>
+
+
+            <button
+                id="clearHistoryBtn"
+                type="button"
+            >
+                🗑️ Clear History
+            </button>
+
+
+            <ul id="history"></ul>
+
+
+            <div class="gesture-help">
+
+                <h3>
+                    Supported Gestures
+                </h3>
+
+                <p>👍 Thumbs Up</p>
+                <p>✊ Fist</p>
+                <p>🖐️ Open Palm</p>
+                <p>✌️ Peace</p>
+                <p>☝️ Pointing Up</p>
+                <p>👌 OK Sign</p>
+                <p>🤏 Pinch</p>
+                <p>🤟 I Love You</p>
+                <p>🤘 Rock</p>
+                <p>👋 Wave</p>
+
+                <hr>
+
+                <p>🤜🤛 Fist Bump</p>
+                <p>🤝 Handshake</p>
+                <p>🤲 Palms Together</p>
+                <p>🫶 Two-Hand Heart</p>
+                <p>👐 Hands Together</p>
+                <p>🙌 Two Open Hands</p>
+
+            </div>
+
+
+        </aside>
+
+
+    </main>
+
+
+    <!-- ========================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================= -->
+
+    <footer>
+
+        <p>
+            HandPuzzle Pro • AI Gesture Recognition
+        </p>
+
+    </footer>
+
+
+    <!-- ========================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================= -->
+
+    <script src="utils.js"></script>
+
+    <script src="gestureRecognizer.js"></script>
+
+    <script src="history.js"></script>
+
+    <script src="audio.js"></script>
+
+    <script src="theme.js"></script>
+
+    <script src="fullscreen.js"></script>
+
+    <script src="screenshot.js"></script>
+
+    <script src="settings.js"></script>
+
+    <script src="fps.js"></script>
+
+    <script src="motionGestures.js?v=4"></script>
+
+    <script src="camera.js?v=4"></script>
+
+    <script src="mouseControl.js"></script>
+
+    <script src="cameraSwitch.js"></script>
+
+    <script src="gestureControl.js"></script>
+
+    <script src="confidence.js"></script>
+
+    <script src="drawing.js"></script>
+
+    <script src="app.js?v=4"></script>
+
+
+    <!-- ========================================= -->
+    <!-- CLEAR HISTORY -->
+    <!-- ========================================= -->
+
+    <script>
+
+        const clearHistoryBtn =
+            document.getElementById(
+                "clearHistoryBtn"
+            );
+
+
+        if (clearHistoryBtn) {
+
+            clearHistoryBtn.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        typeof clearGestureHistory ===
+                        "function"
+                    ) {
+
+                        clearGestureHistory();
+
+                    }
+
+                }
+            );
+
+        }
+
+    </script>
+
 
 </body>
 
 </html>
+

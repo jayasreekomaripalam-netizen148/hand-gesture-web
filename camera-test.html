@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Test</title>
+
+    <style>
+        body {
+            background: #111;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        video {
+            width: 95%;
+            max-width: 900px;
+            border: 3px solid #38bdf8;
+            border-radius: 15px;
+            background: black;
+        }
+
+        button {
+            padding: 15px 25px;
+            margin: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📷 HandPuzzle Pro Camera Test</h1>
+
+<button id="start">Start Camera</button>
+
+<br>
+
+<video
+    id="video"
+    autoplay
+    playsinline
+    muted>
+</video>
+
+<p id="status">Camera not started</p>
+
+<script>
+
+const video =
+    document.getElementById("video");
+
+const status =
+    document.getElementById("status");
+
+document
+    .getElementById("start")
+    .addEventListener("click", async () => {
+
+        try {
+
+            status.textContent =
+                "Requesting camera...";
+
+            const stream =
+                await navigator.mediaDevices
+                .getUserMedia({
+                    video: true,
+                    audio: false
+                });
+
+            video.srcObject =
+                stream;
+
+            await video.play();
+
+            status.textContent =
+                "✅ CAMERA WORKING";
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "❌ " +
+                error.name +
+                ": " +
+                error.message;
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

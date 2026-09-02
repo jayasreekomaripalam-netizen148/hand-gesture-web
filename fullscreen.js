@@ -1,32 +1,95 @@
-const fullscreenBtn = document.getElementById("fullscreenBtn");
+// ============================================
+// HandPuzzle Pro
+// Full Screen Controller
+// ============================================
 
-fullscreenBtn.addEventListener("click", () => {
+const fullscreenButton =
+    document.getElementById("fullscreenBtn");
 
-    if (!document.fullscreenElement) {
 
-        document.documentElement.requestFullscreen()
-            .catch(err => {
-                console.log(err);
-            });
+// ============================================
+// UPDATE BUTTON TEXT
+// ============================================
 
-        fullscreenBtn.innerHTML = "🗗 Exit Full Screen";
+function updateFullscreenButton() {
+
+    if (!fullscreenButton) {
+        return;
+    }
+
+    if (document.fullscreenElement) {
+
+        fullscreenButton.textContent =
+            "🗗 Exit Full Screen";
 
     } else {
 
-        document.exitFullscreen();
-
-        fullscreenBtn.innerHTML = "⛶ Full Screen";
-
-    }
-
-});
-
-document.addEventListener("fullscreenchange", () => {
-
-    if (!document.fullscreenElement) {
-
-        fullscreenBtn.innerHTML = "⛶ Full Screen";
+        fullscreenButton.textContent =
+            "⛶ Full Screen";
 
     }
 
-});
+}
+
+
+// ============================================
+// FULL SCREEN BUTTON
+// ============================================
+
+if (fullscreenButton) {
+
+    fullscreenButton.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                if (!document.fullscreenElement) {
+
+                    await document.documentElement.requestFullscreen();
+
+                } else {
+
+                    await document.exitFullscreen();
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "HandPuzzle Pro: Fullscreen error:",
+                    error
+                );
+
+            }
+
+            updateFullscreenButton();
+
+        }
+    );
+
+} else {
+
+    console.warn(
+        "HandPuzzle Pro: fullscreenBtn not found"
+    );
+
+}
+
+
+// ============================================
+// DETECT FULL SCREEN CHANGES
+// ============================================
+
+document.addEventListener(
+    "fullscreenchange",
+    updateFullscreenButton
+);
+
+
+// ============================================
+// INITIAL BUTTON STATE
+// ============================================
+
+updateFullscreenButton();
+

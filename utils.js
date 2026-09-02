@@ -1,66 +1,210 @@
+// ============================================
+// HandPuzzle Pro
 // Utility Functions
+// ============================================
 
-function distance(point1, point2) {
 
-    const dx = point1.x - point2.x;
-    const dy = point1.y - point2.y;
+// ============================================
+// MIDPOINT
+// ============================================
 
-    return Math.sqrt(dx * dx + dy * dy);
-
-}
-
-function midpoint(point1, point2) {
+function midpoint(
+    point1,
+    point2
+) {
 
     return {
 
-        x: (point1.x + point2.x) / 2,
-        y: (point1.y + point2.y) / 2
+        x:
+            (point1.x + point2.x) / 2,
+
+        y:
+            (point1.y + point2.y) / 2
 
     };
 
 }
 
-function fingerOpen(landmarks, tip, pip) {
 
-    return landmarks[tip].y < landmarks[pip].y;
+// ============================================
+// FINGER OPEN
+// ============================================
+
+function fingerOpen(
+    landmarks,
+    tip,
+    pip
+) {
+
+    if (
+        !landmarks ||
+        !landmarks[tip] ||
+        !landmarks[pip]
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        landmarks[tip].y <
+        landmarks[pip].y
+    );
 
 }
 
-function thumbOpen(landmarks) {
 
-    return landmarks[4].x < landmarks[3].x;
+// ============================================
+// THUMB OPEN
+// ============================================
+
+function thumbOpen(
+    landmarks
+) {
+
+    if (
+        !landmarks ||
+        !landmarks[4] ||
+        !landmarks[3]
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        landmarks[4].x <
+        landmarks[3].x
+    );
 
 }
 
-function calculateAngle(a, b, c) {
+
+// ============================================
+// ANGLE
+// ============================================
+
+function calculateAngle(
+    a,
+    b,
+    c
+) {
+
+    if (
+        !a ||
+        !b ||
+        !c
+    ) {
+
+        return 0;
+
+    }
+
 
     const ab = {
-        x: a.x - b.x,
-        y: a.y - b.y
+
+        x:
+            a.x - b.x,
+
+        y:
+            a.y - b.y
+
     };
+
 
     const cb = {
-        x: c.x - b.x,
-        y: c.y - b.y
+
+        x:
+            c.x - b.x,
+
+        y:
+            c.y - b.y
+
     };
 
-    const dot = ab.x * cb.x + ab.y * cb.y;
 
-    const magAB = Math.sqrt(ab.x * ab.x + ab.y * ab.y);
-    const magCB = Math.sqrt(cb.x * cb.x + cb.y * cb.y);
+    const dot =
+        ab.x * cb.x +
+        ab.y * cb.y;
 
-    return Math.acos(dot / (magAB * magCB));
+
+    const magAB =
+        Math.sqrt(
+            ab.x * ab.x +
+            ab.y * ab.y
+        );
+
+
+    const magCB =
+        Math.sqrt(
+            cb.x * cb.x +
+            cb.y * cb.y
+        );
+
+
+    if (
+        magAB === 0 ||
+        magCB === 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    let value =
+        dot /
+        (magAB * magCB);
+
+
+    value =
+        Math.max(
+            -1,
+            Math.min(
+                1,
+                value
+            )
+        );
+
+
+    return Math.acos(
+        value
+    );
 
 }
 
-function clamp(value, min, max) {
 
-    return Math.max(min, Math.min(max, value));
+// ============================================
+// CLAMP
+// ============================================
+
+function clamp(
+    value,
+    min,
+    max
+) {
+
+    return Math.max(
+        min,
+        Math.min(
+            max,
+            value
+        )
+    );
 
 }
+
+
+// ============================================
+// TIMESTAMP
+// ============================================
 
 function timestamp() {
 
-    return new Date().toLocaleTimeString();
+    return new Date()
+        .toLocaleTimeString();
 
 }
+
